@@ -1,0 +1,77 @@
+r1-vlan file 
+vlan 11
+name HR
+!
+!
+vlan 12
+name Accounting
+!
+!
+vlan 13
+name Sales
+!
+!
+int vlan 11
+ip add 192.168.11.1 255.255.255.0 
+!
+!
+int vlan 12
+ip add 192.168.12.1 255.255.255.0
+!
+!
+int vlan 13 
+ip add 192.168.13.1 255.255.255.0
+!
+!
+ip dhcp excluded-address 192.168.11.1 192.168.11.10
+ip dhcp excluded-address 192.168.12.1 192.168.12.10
+ip dhcp excluded-address 192.168.13.1 192.168.13.10
+!
+!
+ip dhcp pool vlan11
+default-router 192.168.11.1
+network 192.168.11.0 255.255.255.0
+!
+!
+ip dhcp pool vlan12
+default-router 192.168.12.1
+network 192.168.12.0 255.255.255.0
+!
+!
+ip dhcp pool vlan13
+default-router 192.168.13.1
+network 192.168.13.0 255.255.255.0
+!
+!
+!
+int g1/1
+switchport mode access
+switchport access vlan 11
+!
+!
+int g1/2
+switchport mode access
+switchport access vlan 12
+!
+!
+int g1/3
+switchport mode access
+switchport access vlan 13
+!
+!
+ip routing 
+!
+!
+router ospf 2
+network 192.168.11.0 255.255.255.0 area 0
+network 192.168.12.0 255.255.255.0 area 0
+network 192.168.13.0 255.255.255.0 area 0
+!
+!
+service dhcp
+!
+int g0/3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+!
+!

@@ -1,0 +1,556 @@
+Core configuration:
+------------------------------------------------------------------------
+
+//Ports configuration...
+Core(config)# interface g0/0 
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.1.1 255.255.255.0
+Core (config-if)# description connected to the Management server
+Core (config-if)# exit
+Core (config)# interface g0/1
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.2.1 255.255.255.252
+Core (config-if)# description connected to SW1
+Core (config-if)# exit
+Core (config)# interface g0/2
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.2.5 255.255.255.252 
+Core (config-if)# description connected to SW2
+Core (config-if)#exit 
+Core(config)# interface g0/3
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.2.9 255.255.255.0
+Core (config-if)# description connected to SW3
+Core (config-if)# exit
+Core (config)# interface g1/0
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.4.1 255.255.255.252
+Core (config-if)# description connected to NAT-Internet router
+Core (config-if)# exit
+Core (config)# interface g1/1
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.10.1 255.255.255.0
+Core (config-if)# description connected to TFTP-Server
+Core (config-if)#exit 
+Core (config)# interface g1/2
+Core (config-if)# no switchport
+Core (config-if)# ip address 192.168.66.1 255.255.255.0
+Core (config-if)# description connected to Host PC
+Core (config-if)#exit
+Core (config)# interface Loopback0
+Core (config-if)# ip address 1.1.1.1 255.255.255.255
+Core (config-if)# no shut
+
+// OSPF configuration... 
+Core(config)# router ospf 2 
+Core (config-router)# network 192.168.1.0 0.0.0.255 area 0
+Core (config-router)# network 192.168.2.0 0.0.0.3 area 0
+Core (config-router)# network 192.168.2.4 0.0.0.3 area 0
+Core (config-router)# network 192.168.2.8 0.0.0.3 area 0
+Core (config-router)# network 192.168.4.0 0.0.0.3 area 0
+Core (config-router)# network 192.168.10.0 0.0.0.255 area 0
+Core (config-router)# network 192.168.66.0 0.0.0.255 area 0
+Core (config-router)# network 1.1.1.1 0.0.0.0 area 0
+
+// default static root configuration... 
+Core (config)# ip route 0.0.0.0 0.0.0.0 g1/0
+
+
+//SSH configuration...
+Core (config)# username core password c000
+Core (config)# enable password c000
+Core (config)# ip domain-name core.com
+Core (config)# crypto key generate rsa
+Core (config)# 1024
+Core (config)# line vty 0 4
+Core (config-line)# login local
+Core (config-line)# transport input ssh
+Core (config-line)# end
+Core# write memory
+
+
+
+
+
+
+
+
+
+br1-SW1
+------------------------------------------------------------------------
+
+// OSPF configuration... 
+Core(config)# router ospf 2 
+Core (config-router)# network 192.168.1.0 0.0.0.255 area 0
+Core (config-router)# network 192.168.2.0 0.0.0.3 area 0
+Core (config-router)# network 192.168.2.4 0.0.0.3 area 0
+Core (config-router)# network 192.168.2.8 0.0.0.3 area 0
+Core (config-router)# network 192.168.4.0 0.0.0.3 area 0
+Core (config-router)# network 192.168.10.0 0.0.0.255 area 0
+Core (config-router)# network 192.168.66.0 0.0.0.255 area 0
+Core (config-router)# network 1.1.1.1 0.0.0.0 area 0
+
+// default static root configuration... 
+Core (config)# ip route 0.0.0.0 0.0.0.0 g1/0
+
+
+//SSH configuration...
+Core (config)# username core password c000
+Core (config)# enable password c000
+Core (config)# ip domain-name core.com
+Core (config)# crypto key generate rsa
+Core (config)# 1024
+Core (config)# line vty 0 4
+Core (config-line)# login local
+Core (config-line)# transport input ssh
+Core (config-line)# end
+Core# write memory
+
+//Ports configuration...
+SW1 (config)# interface g0/0 
+SW1 (config-if)# no switchport
+SW1 (config-if)# ip address 192.168.2.2 255.255.255.252
+SW1 (config-if)# description connected to the Core
+SW1 (config-if)# exit
+SW1 (config)# interface g0/1
+SW1 (config-if)# no switchport
+SW1 (config-if)# ip address 192.168.2.13 255.255.255.252
+SW1 (config-if)# description connected to SW2
+SW1 (config-if)# exit
+SW1 (config)# interface g0/2
+SW1 (config-if)# no switchport
+SW1 (config-if)# ip address 192.168.3.1 255.255.255.252 
+
+
+
+
+
+
+
+
+
+
+br2-sw2
+------------------------------------------------------------------------
+//Ports configuration...
+SW2 (config)# interface g0/0 
+SW2 (config-if)# no switchport
+SW2 (config-if)# ip address 192.168.2.6 255.255.255.252
+SW2 (config-if)# description connected to the Core
+SW2 (config-if)# exit
+SW2 (config)# interface g0/1
+SW2 (config-if)# no switchport
+SW2 (config-if)# ip address 192.168.2.14 255.255.255.252
+SW2 (config-if)# description connected to SW1
+SW2 (config-if)# exit
+SW2 (config)# interface g0/2
+SW2 (config-if)# no switchport
+SW2 (config-if)# ip address 192.168.2.17 255.255.255.252 
+SW2 (config-if)# description connected to SW3
+SW2 (config-if)#exit 
+SW2 (config)# interface g0/3
+SW2 (config-if)# no switchport
+SW2 (config-if)# ip address 192.168.3.13 255.255.255.252
+SW2 (config-if)# description connected to br1sw1
+SW2 (config-if)# exit
+SW2 (config)# interface g1/0
+SW2 (config-if)# no switchport
+SW2 (config-if)# ip address 192.168.3.17 255.255.255.252
+SW2 (config-if)# description connected to br2sw2
+SW2 (config-if)# exit
+
+SW2 (config)# interface g1/1
+SW2 (config-if)# no switchport
+SW2 (config-if)# ip address 192.168.3.21 255.255.255.252
+SW2 (config-if)# description connected to br3sw3
+SW2 (config-if)# exit
+SW2 (config)# interface Loopback 0
+SW2 (config-if)# ip address 3.3.3.3 255.255.255.255
+SW2 (config-if)# no shut
+
+// OSPF configuration... 
+SW2 (config)# router ospf 2 
+SW2 (config-router)# network 192.168.2.4 0.0.0.3 area 0
+SW2 (config-router)# network 192.168.2.12 0.0.0.3 area 0
+SW2 (config-router)# network 192.168.2.16 0.0.0.3 area 0
+SW2 (config-router)# network 192.168.3.12 0.0.0.3 area 0
+SW2 (config-router)# network 192.168.3.16 0.0.0.3 area 0
+SW2 (config-router)# network 192.168.3.20 0.0.0.3 area 0
+SW2 (config-router)# network 3.3.3.3 0.0.0.0 area 0
+
+// default static root configuration... 
+SW2 (config)# ip route 0.0.0.0 0.0.0.0 g1/0
+
+//SSH configuration...
+SW2 (config)# username br2sw2 password s222
+SW2 (config)# enable password s222
+SW2 (config)# ip domain-name branch2.com
+SW2 (config)# crypto key generate rsa
+SW2 (config)# 1024
+SW2 (config)# line vty 0 4
+SW2 (config-line)# login local
+SW1 (config-line)# transport input ssh
+SW1 (config-line)# end
+SW1 # write memory
+
+
+
+
+
+
+
+
+
+
+br3-sw3
+------------------------------------------------------------------------
+//Ports configuration...
+SW3 (config)# interface g0/0 
+SW3 (config-if)# no switchport
+SW3 (config-if)# ip address 192.168.2.10 255.255.255.252
+SW3 (config-if)# description connected to the Core
+SW3 (config-if)# exit
+SW3 (config)# interface g0/1
+SW3 (config-if)# no switchport
+SW3 (config-if)# ip address 192.168.2.18 255.255.255.252
+SW3 (config-if)# description connected to SW2
+SW3 (config-if)# exit
+SW3 (config)# interface g0/2
+SW3 (config-if)# no switchport
+SW3 (config-if)# ip address 192.168.3.25 255.255.255.252 
+SW3 (config-if)# description connected to br1-sw1
+SW3 (config-if)#exit 
+
+SW3 (config)# interface g0/3
+SW3 (config-if)# no switchport
+SW3 (config-if)# ip address 192.168.3.29 255.255.255.252
+SW3 (config-if)# description connected to br2-sw2
+SW3 (config-if)# exit
+SW3 (config)# interface g1/0
+SW3 (config-if)# no switchport
+SW3 (config-if)# ip address 192.168.3.33 255.255.255.252
+SW3 (config-if)# description connected to br3-sw3
+SW3 (config-if)# exit
+SW3 (config)# interface Loopback 0
+SW3 (config-if)# ip address 4.4.4.4 255.255.255.255
+SW3 (config-if)# no shut
+
+
+// OSPF configuration... 
+SW3 (config)# router ospf 2 
+SW3 (config-router)# network 192.168.2.8 0.0.0.3 area 0
+SW3 (config-router)# network 192.168.2.16 0.0.0.3 area 0
+SW3 (config-router)# network 192.168.3.24 0.0.0.3 area 0
+SW3 (config-router)# network 192.168.3.28 0.0.0.3 area 0
+SW3 (config-router)# network 192.168.3.32 0.0.0.3 area 0
+SW3 (config-router)# network 4.4.4.4 0.0.0.0 area 0
+
+// default static root configuration... 
+SW3 (config)# ip route 0.0.0.0 0.0.0.0 g0/0
+
+
+//SSH configuration...
+SW3 (config)# username br3sw3 password s333
+SW3 (config)# enable password 3333
+SW3 (config)# ip domain-name branch3.com
+SW3 (config)# crypto key generate rsa
+SW3 (config)# 1024
+SW3 (config)# line vty 0 4
+SW3 (config-line)# login local
+SW3 (config-line)# transport input ssh
+SW3 (config-line)# end
+SW3 # write memory
+
+
+
+
+
+
+
+
+
+
+
+br1-r1
+------------------------------------------------------------------------
+//Ports configuration...
+br1-R1(config)# interface g0/0 
+br1-R1 (config-if)# no switchport
+br1-R1 (config-if)# ip address 192.168.3.2 255.255.255.252
+br1-R1 (config-if)# description connected to the SW1
+br1-R1 (config-if)# exit
+br1-R1 (config)# interface g0/1
+br1-R1 (config-if)# no switchport
+br1-R1 (config-if)# ip address 192.168.3.14 255.255.255.252
+br1-R1 (config-if)# description connected to SW2
+br1-R1 (config-if)# exit
+br1-R1 (config)# interface g0/2
+br1-R1 (config-if)# no switchport
+br1-R1 (config-if)# ip address 192.168.3.26 255.255.255.252 
+br1-R1 (config-if)# description connected to SW3
+br1-R1 (config-if)#exit 
+br1-R1 (config)# interface g0/3
+br1-R1 (config)# interface Loopback 0
+br1-R1 (config-if)# ip address 11.11.11.11 255.255.255.255
+br1-R1 (config-if)# no shut
+
+// OSPF configuration... 
+br1-R1 (config)# router ospf 2 
+br1-R1 (config-router)# network 192.168.2.4 0.0.0.3 area 0
+br1-R1 (config-router)# network 192.168.3.0 0.0.0.3 area 0
+br1-R1 (config-router)# network 192.168.3.12 0.0.0.3 area 0
+br1-R1 (config-router)# network 192.168.3.24 0.0.0.3 area 0
+br1-R1 (config-router)# network 11.11.11.11 0.0.0.0 area 0
+br1-R1 (config-router)# network 192.168.11.0 0.0.0.255 area 0
+br1-R1 (config-router)# network 192.168.12.0 0.0.0.255 area 0
+br1-R1 (config-router)# network 192.168.13.0 0.0.0.255 area 0
+
+// default static root configuration... 
+br1-R1 (config)# ip route 0.0.0.0 0.0.0.0 g1/0
+
+//SSH configuration...
+br1-R1 (config)# username br1r1 password r111
+br1-R1 (config)# enable password r111
+br1-R1 (config)# ip domain-name branch1-r1.com
+br1-R1 (config)# crypto key generate rsa
+br1-R1 (config)# 1024
+br1-R1 (config)# line vty 0 4
+br1-R1 (config-line)# login local
+br1-R1 (config-line)# transport input ssh
+br1-R1 (config-line)# end
+br1-R1# write memory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+br2-r2
+------------------------------------------------------------------------
+
+//Ports configuration...
+br2-R2(config)# interface g0/0 
+br2-R2 (config-if)# no switchport
+br2-R2 (config-if)# ip address 192.168.3.6 255.255.255.252
+br2-R2 (config-if)# description connected to the SW1
+br2-R2 (config-if)# exit
+br2-R2 (config)# interface g0/1
+br2-R2 (config-if)# no switchport
+br2-R2 (config-if)# ip address 192.168.3.18 255.255.255.252
+br2-R2 (config-if)# description connected to SW2
+br2-R2 (config-if)# exit
+br2-R2 (config)# interface g0/2
+br2-R2 (config-if)# no switchport
+br2-R2 (config-if)# ip address 192.168.3.30 255.255.255.252 
+br2-R2 (config-if)# description connected to SW3
+br2-R2 (config-if)#exit 
+br2-R2 (config)# interface Loopback 0
+br2-R2 (config-if)# ip address 22.22.22.22 255.255.255.255
+br2-R2 (config-if)# no shut
+
+
+// OSPF configuration... 
+br2-R2 (config)# router ospf 2 
+br2-R2 (config-router)# network 192.168.3.36 0.0.0.3 area 0
+br2-R2 (config-router)# network 192.168.3.4 0.0.0.3 area 0
+br2-R2 (config-router)# network 192.168.3.16 0.0.0.3 area 0
+br2-R2 (config-router)# network 192.168.3.28 0.0.0.3 area 0
+br2-R2 (config-router)# network 192.168.21.0 0.0.0.255 area 0
+br2-R2 (config-router)# network 192.168.22.0 0.0.0.255 area 0
+br2-R2 (config-router)# network 192.168.23.0 0.0.0.255 area 0
+br2-R2 (config-router)# network 22.22.22.22 0.0.0.0 area 0
+
+// default static root configuration... 
+br1-R1 (config)# ip route 0.0.0.0 0.0.0.0 g0/1
+
+//SSH configuration...
+br2-R2 (config)# username br2r3 password r222
+br2-R2 (config)# enable password r222
+br2-R2 (config)# ip domain-name branch2-r2.com
+br2-R2 (config)# crypto key generate rsa
+br2-R2 (config)# 1024
+br2-R2 (config)# line vty 0 4
+br2-R2 (config-line)# login local
+br2-R2 (config-line)# transport input ssh
+br2-R2 (config-line)# end
+br2-R2# write memory br3-R3
+
+
+
+
+
+
+
+
+
+
+
+br3-r3
+------------------------------------------------------------------------
+//Ports configuration...
+br3-R3(config)# interface g0/0 
+br3-R3(config-if)# no switchport
+br3-R3(config-if)# ip address 192.168.3.10 255.255.255.252
+br3-R3(config-if)# description connected to the SW1
+br3-R3(config-if)# exit
+br3-R3(config)# interface g0/1
+br3-R3(config-if)# no switchport
+br3-R3(config-if)# ip address 192.168.3.22 255.255.255.252
+br3-R3(config-if)# description connected to SW2
+br3-R3(config-if)# exit
+br3-R3(config)# interface g0/2
+br3-R3(config-if)# no switchport
+br3-R3(config-if)# ip address 192.168.3.34 255.255.255.252
+br3-R3(config-if)# description connected to SW3
+
+
+br3-R3(config)# interface Loopback 0
+br3-R3(config-if)# ip address 33.33.33.33 255.255.255.255
+br3-R3(config-if)# no shut
+
+
+// OSPF configuration... 
+br3-R3(config)# router ospf 2 
+br3-R3(config-router)# network 192.168.3.8 0.0.0.3 area 0
+br3-R3(config-router)# network 192.168.3.20 0.0.0.3 area 0
+br3-R3(config-router)# network 192.168.3.32 0.0.0.3 area 0
+br3-R3(config-router)# network 192.168.31.0 0.0.0.255 area 0
+br3-R3(config-router)# network 192.168.32.0 0.0.0.255 area 0
+br3-R3(config-router)# network 192.168.33.0 0.0.0.255 area 0
+br3-R3(config-router)# network 33.33.33.33 0.0.0.0 area 0
+
+// default static root configuration... 
+br1-R1 (config)# ip route 0.0.0.0 0.0.0.0 g0/2
+
+//SSH configuration...
+br3-R3(config)# username br3r3 password r333
+br3-R3(config)# enable password r333
+br3-R3(config)# ip domain-name branch3-r3.com
+br3-R3(config)# crypto key generate rsa
+br3-R3(config)# 1024
+br3-R3(config)# line vty 0 4
+br3-R3(config-line)# login local
+br3-R3(config-line)# transport input ssh
+br3-R3(config-line)# end
+br3-R3# write memory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
